@@ -16,27 +16,53 @@ import org.omg.CORBA.DATA_CONVERSION;
 
 public class QualityFunctions {
 	public static double localClusteringCoefficient(Node v, Cluster c) {
+		double tot = 0;
+		LinkedList<String> l = c.getInternalNeighbors(v);
+		ListIterator<String> it = l.listIterator();
+		while (it.hasNext()) {
+			Node n = c.getNode(it.next());
+			LinkedList<String> l1 = c.getInternalNeighbors(n);
+			ListIterator<String> it1 = l1.listIterator();
+			while (it1.hasNext()) {
+				if (l.contains(it1.next()))
+					tot++;
+			}
+
+		}
+
 		int internalDegree = c.getInternalDegree(v);
-		double fclus = (double) (2 * internalDegree) / (internalDegree * (internalDegree - 1));
+		double fclus = (double) (tot) / (internalDegree * (internalDegree - 1));
+
+		if (Double.isNaN(fclus))
+			fclus = 1.0;
+
 		return fclus;
 	}
 
 	public static double permanence(Node v, Cluster c, LinkedList<Cluster> clusters) {
 		int m = c.getInternalDegree(v);
+		// System.out.println("m="+m);
 		int maxValue = 0;
 		int temp = 0;
 		Cluster maxCluster;
 		for (Cluster c1 : clusters) {
-			if (!c1.equals(c)) {
+			if (!c1.getName().equals(c.getName())) {
 				temp = c1.getInternalDegree(v);
+				// System.out.println("temp="+temp);
 				if (temp > maxValue) {
 					maxValue = temp;
 					maxCluster = c1;
 				}
 			}
 		}
-		double fclus = (2 * m) / (m * (m - 1));
-		return (double) (fclus - 1 + m / (maxValue * v.getDegree()));
+		double fclus = (double) (2 * m) / (m * (m - 1));
+		// System.out.println("fclus=" + fclus);
+		// System.out.println("m=" + m);
+		// System.out.println("maxv=" + maxValue);
+		// System.out.println("vDegreee=" + v.getDegree() + "");
+		double value = (fclus - 1) + (double) m / (maxValue * v.getDegree());
+
+		return value == Double.POSITIVE_INFINITY ? 1 : value;
 
 	}
 
@@ -44,8 +70,8 @@ public class QualityFunctions {
 		int m = c.getInternalDegree(n);
 		int sum = 0;
 		for (Cluster c1 : clusters) {
-			if (!c1.equals(c)) {
-				sum += c.getInternalDegree(n);
+			if (!c1.getName().equals(c.getName())) {
+				sum += c1.getInternalDegree(n);
 			}
 		}
 		return m > sum ? 1 : 0;
@@ -67,7 +93,8 @@ public class QualityFunctions {
 		int temp = 0;
 		Cluster maxCluster;
 		for (Cluster c1 : clusters) {
-			if (!c1.equals(c)) {
+			// System.out.println(c.getName()+ " " + c1.getName());
+			if (!c1.getName().equals(c.getName())) {
 				temp = c1.getInternalDegree(n);
 				sum += temp;
 				if (temp > maxValue) {
@@ -79,7 +106,10 @@ public class QualityFunctions {
 		clus = localClusteringCoefficient(n, c);
 		fomd = mnc > median ? 1 : 0;
 		flak = mnc > sum ? 1 : 0;
-		perm = (clus - 1 + mnc / (maxValue * n.getDegree()));
+		perm = (clus - 1 + (double) mnc / (maxValue * n.getDegree()));
+
+		if (perm == Double.POSITIVE_INFINITY)
+			perm = 1;
 
 		double[] values = { clus, perm, flak, fomd };
 		return values;
@@ -94,7 +124,7 @@ public class QualityFunctions {
 
 	public static double cutRatio(Cluster c, Graph g) {
 		double m = c.externalDegree();
-		System.out.println("external "+m);
+		// System.out.println("external "+m);
 		double kc = c.getN();
 		double fcut = (1 - (m / (kc * (g.getN() - kc))));
 		return fcut * (kc / g.getN());
@@ -112,7 +142,7 @@ public class QualityFunctions {
 		double m = c.getM();
 		c.computeDiameter();
 		double diam = c.getDiameter();
-		System.out.println("Diam di "+ c.getName()+"="+diam);
+		// System.out.println("Diam di "+ c.getName()+"="+diam);
 		return (double) m / diam;
 	}
 
@@ -179,11 +209,11 @@ public class QualityFunctions {
 
 	public static double deviation(double x, double y) {
 		double dev = x * Math.log(x / y) + (1 - x) * Math.log((1 - x) / (1 - y));
-//		 System.out.println("x=" + x);
-//		 System.out.println("y=" + y);
-//		System.out.println("dev=" + dev);
-//		if (y == 0)
-//			System.err.println("y=" + y);
+		// System.out.println("x=" + x);
+		// System.out.println("y=" + y);
+		// System.out.println("dev=" + dev);
+		// if (y == 0)
+		// System.err.println("y=" + y);
 		return dev;
 	}
 

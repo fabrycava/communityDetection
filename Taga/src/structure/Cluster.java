@@ -2,6 +2,7 @@ package structure;
 
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.ListIterator;
 
 import algorithms.Dijkstra;
 import algorithms.DijkstraCluster;
@@ -15,18 +16,17 @@ public class Cluster extends Graph {
 		this.nodes.put(node.getId(), node);
 		LinkedList<String> neighbors = node.getNeighbors();
 
-
 		Iterator<String> it = neighbors.iterator();
 
 		LinkedList<String> inside = new LinkedList<>();
 		while (it.hasNext()) {
 			String n = it.next();
-			if (containsNode(n)&&!containsEdge(getNode(n),node)) {
+			if (containsNode(n) && !containsEdge(getNode(n), node)) {
 				inside.add(n);
 			}
 		}
-		for(String s: inside){
-			addEdge(node,getNode(s));
+		for (String s : inside) {
+			addEdge(node, getNode(s));
 		}
 
 	}
@@ -52,34 +52,33 @@ public class Cluster extends Graph {
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
-		
-		sb.append("Cluster:"+getName()+"\n#Nodes:" + nodes.size() + "\n#Edges:" + edges.size()  + "\nVol=" + getVolume());
+
+		sb.append("Cluster:" + getName() + "\n#Nodes:" + nodes.size() + "\n#Edges:" + edges.size() + "\nVol="
+				+ getVolume());
 		sb.append("\nNodes: \n");
 
 		for (Node n : nodes.values()) {
 			sb.append(n.getId() + " ");
 		}
 
-//		sb.append("\nEdges: \n");
-//		for (Edge e : edges) {
-//			sb.append(e.toString() + "\t");
-//		}
+		// sb.append("\nEdges: \n");
+		// for (Edge e : edges) {
+		// sb.append(e.toString() + "\t");
+		// }
 		return sb.toString();
 
 	}
 
 	public int externalDegree() {
 		int tot = 0;
-		for (Node n:nodes.values()){
-			LinkedList<String> neighbors=n.getNeighbors();
-			for(String s:neighbors){
-				if(!containsNode(s))
-						tot++;
+		for (Node n : nodes.values()) {
+			LinkedList<String> neighbors = n.getNeighbors();
+			for (String s : neighbors) {
+				if (!containsNode(s))
+					tot++;
 			}
 		}
-		
-		
-	
+
 		return tot;
 	}
 
@@ -94,28 +93,31 @@ public class Cluster extends Graph {
 		}
 		return tot;
 	}
-	
-	
-	
-	
-	
-	
-	
+
+	public LinkedList<String> getInternalNeighbors(Node n) {
+		LinkedList<String> l = n.getNeighbors();
+		//System.out.println(l.size());
+		ListIterator<String> it = l.listIterator();
+		while (it.hasNext()) {
+			if (!containsNode(it.next()))
+				it.remove();
+		}
+		//System.out.println(l.size());
+		return l;
+	}
+
 	@Override
 	public void computeDiameter() {
 		DijkstraCluster dijkstra = new DijkstraCluster(this);
 		diameter = 0;
 		for (Node n : nodes.values()) {
 			double v = dijkstra.getLongestDistance(n.getId());
-			//System.out.println(v);
+			// System.out.println(v);
 			if (v > diameter)
 				diameter = v;
 		}
-		
+
 	}
-	
-	
-	
 
 	// @Override
 	// public String toString() {
