@@ -1,7 +1,5 @@
 package structure;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -9,10 +7,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.ListIterator;
 
-import org.omg.CORBA.INTERNAL;
-
 import algorithms.Dijkstra;
-import algorithms.LabelPropagation;
 
 public class Graph {
 
@@ -30,6 +25,19 @@ public class Graph {
 
 	public String getName() {
 		return name;
+	}
+
+	public void createCluster(String name) {
+		Cluster c = new Cluster(name);
+		clusters.add(c);
+	}
+
+	public void addCluster(Cluster c) {
+		clusters.add(c);
+	}
+
+	public void removeCluster(String name) {
+		clusters.remove(name);
 	}
 
 	public void setName(String name) {
@@ -67,7 +75,7 @@ public class Graph {
 			vol += n.getDegree();
 		}
 	}
-	
+
 	public boolean containsEdge(Node i, Node j) {
 		Edge e = new Edge(i, j);
 		for (Edge e1 : edges) {
@@ -148,8 +156,6 @@ public class Graph {
 		return false;
 	}
 
-	
-
 	public double medianDegree() {
 		int tot = 0;
 		for (Node n : nodes.values()) {
@@ -157,6 +163,13 @@ public class Graph {
 		}
 		return (double) tot / nodes.size();
 
+	}
+
+	public void addNodeInCluster(Node n, String c) {
+		for (Cluster c1 : clusters) {
+			if (c.equals(c1.getName()))
+				c1.addNode(n);
+		}
 	}
 
 	public void addNodeInCluster(Node n) {
@@ -181,6 +194,16 @@ public class Graph {
 
 		}
 
+	}
+
+	public Cluster getCluster(String s) {
+		if (!clusters.contains(s)) {
+			throw new RuntimeException("Cluster " + s + " is not contained in the graph");
+		}
+		for (Cluster c : clusters)
+			if (c.getName().equalsIgnoreCase(s))
+				return c;
+		return null;
 	}
 
 	public Iterator<Node> iterator() {
@@ -229,6 +252,12 @@ public class Graph {
 		return vol;
 	}
 
+	public void removeNodeFromCluster(Node n, String c) {
+		for (Cluster c1 : clusters)
+			if (c1.getName().equals(c))
+				c1.removeNode(n);
+	}
+
 	protected class GraphShuffledIterator implements Iterator<Node> {
 
 		private ListIterator<String> it;
@@ -256,14 +285,14 @@ public class Graph {
 		diameter = 0;
 		for (Node n : nodes.values()) {
 			double v = dijkstra.getLongestDistance(n.getId());
-			//System.out.println(v);
+			// System.out.println(v);
 			if (v > diameter)
 				diameter = v;
 		}
-		
+
 	}
-	
-	public double getDiameter(){
+
+	public double getDiameter() {
 		return diameter;
 	}
 

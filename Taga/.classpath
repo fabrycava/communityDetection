@@ -3,6 +3,7 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
 	<classpathentry kind="lib" path="C:/Users/fabrizio/Desktop/commons-math3-3.6.1.jar"/>
-	<classpathentry kind="lib" path="C:/Users/fabrizio/Desktop/jung/jung-graph-impl-2.0.1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/fabrizio/Dropbox/Uni/Specialistica/II ANNO/Basi di dati/Tagarelli/Progetto/javaml-0.1.7/javaml-0.1.7.jar"/>
+	<classpathentry kind="lib" path="C:/Users/fabrizio/Dropbox/Uni/Specialistica/II ANNO/Basi di dati/Tagarelli/Progetto/javaml-0.1.7/lib/ajt-2.9.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

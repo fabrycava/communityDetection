@@ -12,12 +12,12 @@ import structure.Cluster;
 import structure.Graph;
 import structure.Node;
 
-public class LabelPropagation {
+public class LabelPropagation extends Algorithm{
 
-	Graph g = new Graph();
+	
 
 	public LabelPropagation(Graph g) {
-		this.g = g;
+		super(g);
 	}
 
 	public void compute() {
@@ -57,7 +57,7 @@ public class LabelPropagation {
 
 	}
 
-	private void createClusters() {
+	protected void createClusters() {
 
 		for (Node n : g.getNodes().values()) {
 			//System.out.println("node " + n + " va in cluster " + n.getLabel());

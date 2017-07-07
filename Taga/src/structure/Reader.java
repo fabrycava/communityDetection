@@ -7,14 +7,11 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.StringTokenizer;
 
-import edu.uci.ics.jung.graph.UndirectedSparseGraph;
-
 public class Reader {
 	private Graph g;
 	private File f;
 	private int n;
 	private String name;
-	private UndirectedSparseGraph<Node, Edge> u;
 
 	public Reader(File f, int n, String name) throws IOException {
 		this.f = f;

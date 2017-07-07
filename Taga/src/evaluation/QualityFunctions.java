@@ -1,18 +1,15 @@
 package evaluation;
 
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.ListIterator;
 
+import org.apache.commons.math3.util.CombinatoricsUtils;
+
 import structure.Cluster;
 import structure.Graph;
 import structure.Node;
-
-import org.apache.commons.math3.util.CombinatoricsUtils;
-import org.omg.CORBA.DATA_CONVERSION;
 
 public class QualityFunctions {
 	public static double localClusteringCoefficient(Node v, Cluster c) {

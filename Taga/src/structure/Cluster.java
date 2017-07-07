@@ -4,10 +4,16 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.ListIterator;
 
-import algorithms.Dijkstra;
 import algorithms.DijkstraCluster;
 
 public class Cluster extends Graph {
+
+	public Cluster(String name) {
+		this.name = name;
+	}
+	public Cluster(){
+		
+	}
 
 	@Override
 	public void addNode(Node node) {
@@ -96,13 +102,13 @@ public class Cluster extends Graph {
 
 	public LinkedList<String> getInternalNeighbors(Node n) {
 		LinkedList<String> l = n.getNeighbors();
-		//System.out.println(l.size());
+		// System.out.println(l.size());
 		ListIterator<String> it = l.listIterator();
 		while (it.hasNext()) {
 			if (!containsNode(it.next()))
 				it.remove();
 		}
-		//System.out.println(l.size());
+		// System.out.println(l.size());
 		return l;
 	}
 

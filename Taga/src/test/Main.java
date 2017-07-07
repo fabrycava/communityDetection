@@ -3,20 +3,24 @@ package test;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
 
-import algorithms.Dijkstra;
 import algorithms.LabelPropagation;
 import evaluation.QualityFunctions;
+import net.sf.javaml.clustering.mcl.MCL;
+import net.sf.javaml.clustering.mcl.MarkovClustering;
+import net.sf.javaml.core.Dataset;
+import net.sf.javaml.distance.CosineSimilarity;
+import net.sf.javaml.distance.DistanceMeasure;
+import net.sf.javaml.tools.data.ARFFHandler;
+import net.sf.javaml.tools.data.FileHandler;
 import structure.Cluster;
 import structure.Graph;
 import structure.Node;
 import structure.Reader;
 
-public class Main {
+public class Main{
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException {
 		Reader r = null;
 		String name = "dolphins";
 		try {
@@ -64,7 +68,7 @@ public class Main {
 		}
 
 		System.out.println("\nVertex Level");
-		int tot=0;
+		int tot = 0;
 		double clus = 0, perm = 0, flak = 0, fomd = 0;
 		double[] vertexLevel = new double[4];
 		for (Cluster c : g.getClusters()) {
@@ -75,20 +79,40 @@ public class Main {
 				double cl = QualityFunctions.localClusteringCoefficient(n, c);
 				double odf = QualityFunctions.flakeODF(n, c, g.getClusters());
 				double omd = QualityFunctions.fomd(n, c, g);
-				
+
 				for (int i = 0; i < vertexLevel.length; i++)
 					vertexLevel[i] += values[i];
 			}
 		}
-		
 
-		System.out.println("val tot="+Arrays.toString(vertexLevel));
+		System.out.println("val tot=" + Arrays.toString(vertexLevel));
 
-		for(int i=0;i<vertexLevel.length;i++){
-			vertexLevel[i]/=tot;
+		for (int i = 0; i < vertexLevel.length; i++) {
+			vertexLevel[i] /= tot;
 		}
-		System.out.println("avg val="+Arrays.toString(vertexLevel));
+		System.out.println("avg val=" + Arrays.toString(vertexLevel));
 
+		MarkovClustering mc = new MarkovClustering();
+
+		Dataset data = FileHandler.loadDataset(new File("src/datasets/iris.csv"), 4, ",");
+		
+		
+		Dataset data1=ARFFHandler.loadARFF(new File("src/datasets/dolphins"),1);
+		
+		
+		DistanceMeasure dm=new CosineSimilarity();
+		
+		MCL mcl=new MCL(dm);
+		
+		Dataset[] ris=mcl.cluster(data);
+		
+		System.out.println(Arrays.toString(ris));
+		System.out.println(ris.length);
+		
+		System.out.println(data);
+		System.out.println("daaaaaa");
+		
+		
 		// System.out.println(vertexLevel);
 
 		// Graph g1 = new Graph();
