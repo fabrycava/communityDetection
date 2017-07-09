@@ -13,6 +13,15 @@ public class Cluster extends Graph {
 	}
 	public Cluster(){
 		
+	}	
+	
+	
+	@Override
+	public void computeVolume(){
+		vol = 0;
+		for (Node n : nodes.values()) {
+			vol+=getInternalDegree(n);
+		}		
 	}
 
 	@Override
@@ -35,6 +44,11 @@ public class Cluster extends Graph {
 			addEdge(node, getNode(s));
 		}
 
+	}
+	
+	
+	public boolean isEmpty(){
+		return nodes.size()==0;
 	}
 
 	@Override
@@ -123,6 +137,16 @@ public class Cluster extends Graph {
 				diameter = v;
 		}
 
+	}
+	
+	
+	public boolean equals(Object o){
+		if(o==this)
+			return true;
+		if(!(o instanceof Cluster))
+			return false;
+		Cluster c=(Cluster)o;
+		return c.getName().equals(this.getName());
 	}
 
 	// @Override

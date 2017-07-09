@@ -15,7 +15,7 @@ public class Graph {
 	protected HashSet<Edge> edges = new HashSet<>();
 	private LinkedList<Cluster> clusters = new LinkedList<>();
 
-	private int vol;
+	protected int vol;
 
 	protected LinkedList<String> nodeList = new LinkedList<>();
 
@@ -37,7 +37,7 @@ public class Graph {
 	}
 
 	public void removeCluster(String name) {
-		clusters.remove(name);
+		clusters.remove(getCluster(name));
 	}
 
 	public void setName(String name) {
@@ -128,14 +128,24 @@ public class Graph {
 
 	public void removeNode(Node node) {
 
-		this.nodes.remove(node);
+		this.nodes.remove(node.getId());
 		this.nodeList.remove(node.getId());
 
-		for (Edge e : edges) {
+		Iterator<Edge> it = edges.iterator();
+		LinkedList<Edge> toRemove = new LinkedList<>();
+		while (it.hasNext()) {
+			Edge e = it.next();
 			if (node.equals(e.getDestination()) || node.equals(e.getSource())) {
-				removeEdge(e);
+				toRemove.add(e);
 			}
 		}
+		for (Edge e : toRemove)
+			removeEdge(e);
+		// for (Edge e : edges) {
+		// if (node.equals(e.getDestination()) || node.equals(e.getSource())) {
+		// removeEdge(e);
+		// }
+		// }
 	}
 
 	protected void removeEdge(Edge e) throws RuntimeException {
@@ -149,10 +159,11 @@ public class Graph {
 	}
 
 	protected boolean containsEdge(Edge e) {
-		for (Edge e1 : edges) {
-			if (e.equals(e1))
+		for(Edge e1:edges){
+			if(e.equals(e1))
 				return true;
 		}
+
 		return false;
 	}
 
@@ -168,6 +179,7 @@ public class Graph {
 	public void addNodeInCluster(Node n, String c) {
 		for (Cluster c1 : clusters) {
 			if (c.equals(c1.getName()))
+				// if (!c1.containsNode(n.getId()))
 				c1.addNode(n);
 		}
 	}
@@ -197,9 +209,12 @@ public class Graph {
 	}
 
 	public Cluster getCluster(String s) {
-		if (!clusters.contains(s)) {
-			throw new RuntimeException("Cluster " + s + " is not contained in the graph");
-		}
+		// System.out.println(s);
+		// System.out.println(clusters);
+		// if (!clusters.contains(s)) {
+		// throw new RuntimeException("Cluster " + s + " is not contained in the
+		// graph");
+		// }
 		for (Cluster c : clusters)
 			if (c.getName().equalsIgnoreCase(s))
 				return c;
@@ -253,9 +268,18 @@ public class Graph {
 	}
 
 	public void removeNodeFromCluster(Node n, String c) {
-		for (Cluster c1 : clusters)
-			if (c1.getName().equals(c))
+		Iterator<Cluster> it = clusters.iterator();
+
+		while (it.hasNext()) {
+			Cluster c1 = it.next();
+			if (c1.getName().equals(c)) {
+				//System.out.println("prima=\n" +c1);
 				c1.removeNode(n);
+				//System.out.println("dopo=\n"+c1);
+			}
+
+		}
+
 	}
 
 	protected class GraphShuffledIterator implements Iterator<Node> {
@@ -294,6 +318,10 @@ public class Graph {
 
 	public double getDiameter() {
 		return diameter;
+	}
+
+	public void cleanClusters() {
+		clusters = new LinkedList<>();
 	}
 
 }

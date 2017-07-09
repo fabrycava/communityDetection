@@ -1,4 +1,4 @@
-package structure;
+package reader;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -6,6 +6,9 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.StringTokenizer;
+
+import structure.Graph;
+import structure.Node;
 
 public class Reader {
 	private Graph g;
@@ -26,7 +29,8 @@ public class Reader {
 			BufferedReader br = new BufferedReader(new FileReader(f));
 			int count = 0;
 			String s = br.readLine();
-			while (s != null) {
+			
+			while (s != null&&count<n) {
 				count++;
 				try {
 					StringTokenizer st = new StringTokenizer(s);

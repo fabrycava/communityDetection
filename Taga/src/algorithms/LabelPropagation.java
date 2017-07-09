@@ -53,6 +53,8 @@ public class LabelPropagation extends Algorithm{
 
 			}
 		}
+		
+		//System.out.println("inizio creazione cluster\n");
 		createClusters();
 
 	}
