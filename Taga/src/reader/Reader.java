@@ -30,7 +30,10 @@ public class Reader {
 			int count = 0;
 			String s = br.readLine();
 			
+			
 			while (s != null&&count<n) {
+				if(name.equals("amazon"))
+					System.out.println(count);
 				count++;
 				try {
 					StringTokenizer st = new StringTokenizer(s);
